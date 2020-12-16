@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
-import org.jsoup.Jsoup;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,8 +24,9 @@ import java.net.http.HttpClient;
 @SuppressWarnings("unused")
 public class BaseProgram
 {
-    static final String kuser = "xCi0ITMTYqw9F5CJ";
-    static final String kpass = "F3G2xZSH5G1RHB2U";
+    protected final static String kuser = "";
+    protected final static String kpass = "";
+    protected final static String domain = "";
     
 	public static void main(String[] args) throws IOException
 	{
@@ -55,7 +55,6 @@ public class BaseProgram
 	{
 		
 		String string = SetIP();
-		System.out.println(string);
 		String keyword = "good" + GetIP();
 		String Status = "";
 		Boolean found = Arrays.asList(string.split(" ")).contains(keyword);
@@ -72,16 +71,17 @@ public class BaseProgram
 		return Status;
 	}
 		
+	@SuppressWarnings("resource")
 	public static String SetIP() throws MalformedURLException, IOException
 	{
 		Authenticator.setDefault(new MyAuthenticator());
-		URL url = new URL("https://domains.google.com/nic/update?hostname=home.shdit.dev&myip=" + GetIP());
+		URL url = new URL("https://domains.google.com/nic/update?" + domain + "&myip=" + GetIP());
 		InputStream ins = url.openConnection().getInputStream();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
 		Scanner SCANNER = new Scanner(url.openConnection().getInputStream());
 		StringBuffer BUFFER = new StringBuffer();
 		String str = "";
-		//while((str = reader.readLine()) != null)
+		
 		while(SCANNER.hasNext())
 		{
 			BUFFER.append(SCANNER.next());
@@ -112,7 +112,7 @@ public class BaseProgram
 	
     static class MyAuthenticator extends Authenticator 
     {
-        public PasswordAuthentication getPasswordAuthentication()
+        protected PasswordAuthentication getPasswordAuthentication()
         {
             // Basic HTTP authentication that needs for Google Domain open
             System.err.println("Feeding username and password for " + getRequestingScheme());
